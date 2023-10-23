@@ -1,0 +1,27 @@
+subdir('rdkit-cffi')
+
+install_headers(
+	'rdkit-cffi/GraphMol/ChemReactions/Reaction.h',
+	'rdkit-cffi/GraphMol/ChemReactions/ReactionParser.h',
+	'rdkit-cffi/GraphMol/ChemReactions/ReactionPickler.h',
+	'rdkit-cffi/GraphMol/FileParsers/MolSupplier.h',
+	'rdkit-cffi/GraphMol/FileParsers/MolWriters.h',
+	'rdkit-cffi/GraphMol/FileParsers/MultithreadedMolSupplier.h',
+	'rdkit-cffi/GraphMol/FileParsers/MultithreadedSDMolSupplier.h',
+	'rdkit-cffi/GraphMol/FileParsers/MultithreadedSmilesMolSupplier.h',
+	'rdkit-cffi/GraphMol/SmilesParse/SmilesParse.h',
+	'rdkit-cffi/GraphMol/SmilesParse/SmilesWrite.h',
+	'rdkit-cffi/GraphMol/Substruct/SubstructMatch.h',
+	'rdkit-cffi/GraphMol/Atom.h',
+	'rdkit-cffi/GraphMol/MolOps.h',
+	'rdkit-cffi/GraphMol/MolPickler.h',
+	'rdkit-cffi/GraphMol/ROMol.h',
+	'rdkit-cffi/GraphMol/RWMol.h',
+	'rdkit-cffi/RDGeneral/RDProps.h',
+	'rdkit-cffi/decls.h',
+	'rdkit-cffi/stream.h',
+	'rdkit-cffi/string.h',
+	'rdkit-cffi/types.h',
+	'rdkit-cffi/visibility.h',
+	preserve_path: true,
+)
