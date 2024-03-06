@@ -2,6 +2,7 @@
 #define RDKIT_CFFI__GRAPHMOL__RWMOL_H 1
 
 #include "rdkit-cffi/decls.h"
+#include "rdkit-cffi/types.h"
 #include "rdkit-cffi/visibility.h"
 
 #ifdef __cplusplus
@@ -19,6 +20,7 @@ RDKIT_CFFI_API rdkit_RWMol *rdkit_rwmol_from_romol(rdkit_ROMol *cthis);
 RDKIT_CFFI_API rdkit_RWMol *rdkit_rwmol_new(void);
 RDKIT_CFFI_API void rdkit_rwmol_del(rdkit_RWMol *cthis);
 RDKIT_CFFI_API void rdkit_rwmol_ctor(rdkit_RWMol *cthis);
+RDKIT_CFFI_API void rdkit_rwmol_ctor_from_romol(rdkit_RWMol *cthis, const rdkit_ROMol *cromol);
 RDKIT_CFFI_API void rdkit_rwmol_dtor(rdkit_RWMol *cthis);
 
 #ifdef __cplusplus

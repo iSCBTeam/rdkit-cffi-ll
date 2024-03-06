@@ -58,6 +58,18 @@ void rdkit_rdprops_set_prop_i32(rdkit_RDProps *cthis, const rdkit_string *key, i
 	this_->setProp(std::string(key->s, key->len), val);
 }
 
+void rdkit_rdprops_set_prop_f32(rdkit_RDProps *cthis, const rdkit_string *key, float val)
+{
+	auto this_ = c2cpp(cthis);
+	this_->setProp(std::string(key->s, key->len), val);
+}
+
+void rdkit_rdprops_set_prop_f64(rdkit_RDProps *cthis, const rdkit_string *key, double val)
+{
+	auto this_ = c2cpp(cthis);
+	this_->setProp(std::string(key->s, key->len), val);
+}
+
 bool rdkit_rdprops_get_prop_str(const rdkit_RDProps *cthis, const rdkit_string *key, rdkit_string_owned *val)
 {
 	auto this_ = c2cpp(cthis);
@@ -83,6 +95,30 @@ bool rdkit_rdprops_get_prop_u32(const rdkit_RDProps *cthis, const rdkit_string *
 }
 
 bool rdkit_rdprops_get_prop_i32(const rdkit_RDProps *cthis, const rdkit_string *key, int32_t *val)
+{
+	auto this_ = c2cpp(cthis);
+	try {
+		this_->getProp(std::string(key->s, key->len), *val);
+	} catch(std::exception& e) {
+		*val = 0;
+		return false;
+	}
+	return true;
+}
+
+bool rdkit_rdprops_get_prop_f32(const rdkit_RDProps *cthis, const rdkit_string *key, float *val)
+{
+	auto this_ = c2cpp(cthis);
+	try {
+		this_->getProp(std::string(key->s, key->len), *val);
+	} catch(std::exception& e) {
+		*val = 0;
+		return false;
+	}
+	return true;
+}
+
+bool rdkit_rdprops_get_prop_f64(const rdkit_RDProps *cthis, const rdkit_string *key, double *val)
 {
 	auto this_ = c2cpp(cthis);
 	try {

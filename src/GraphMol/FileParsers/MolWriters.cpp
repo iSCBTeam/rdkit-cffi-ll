@@ -133,7 +133,7 @@ void rdkit_smiles_writer_ctor_filename_ex(
 
 	ctor_ex_defaults(delimiter, name_header, include_header, isomeric_smiles, kekule_smiles);
 
-	new (cthis) SmilesWriter(zstring_view(filename), rdkit_string_to_view(delimiter), rdkit_string_to_view(name_header), include_header, isomeric_smiles, kekule_smiles);
+	new (cthis) SmilesWriter(zstring_view(filename), rdkit_string_to_view(delimiter), rdkit_string_to_view(name_header), !!include_header, !!isomeric_smiles, !!kekule_smiles);
 }
 
 void rdkit_smiles_writer_ctor_ostream(rdkit_SmilesWriter *cthis, rdkit_ostream *cstream)
@@ -153,7 +153,7 @@ void rdkit_smiles_writer_ctor_ostream_ex(
 	ctor_ex_defaults(delimiter, name_header, include_header, isomeric_smiles, kekule_smiles);
 
 	auto stream = c2cpp(cstream);
-	new (cthis) SmilesWriter(stream, rdkit_string_to_view(delimiter), rdkit_string_to_view(name_header), include_header, isomeric_smiles, kekule_smiles);
+	new (cthis) SmilesWriter(stream, rdkit_string_to_view(delimiter), rdkit_string_to_view(name_header), !!include_header, !!isomeric_smiles, !!kekule_smiles);
 }
 
 void rdkit_smiles_writer_dtor(rdkit_SmilesWriter *cthis)
@@ -209,7 +209,8 @@ bool rdkit_sd_writer_get_text(rdkit_string_owned *text, const rdkit_ROMol *cmol)
 	return rdkit_sd_writer_get_text_ex(text, cmol, RDKIT_DEFAULT_I32, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_I32, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_PTR);
 }
 
-bool rdkit_sd_writer_get_text_ex(rdkit_string_owned *text, const rdkit_ROMol *cmol, int32_t conf_id, rdkit_tribool kekulize, rdkit_tribool force_v3000, int32_t mol_id, size_t num_cprop_names, const char *cprop_names[])
+// TODO: Switch cprop_names to array of rdkit_strings
+bool rdkit_sd_writer_get_text_ex(rdkit_string_owned *text, const rdkit_ROMol *cmol, int32_t conf_id, rdkit_tribool kekulize, rdkit_tribool force_v3000, int32_t mol_id, size_t num_cprop_names, const char *const cprop_names[])
 {
 	auto mol = c2cpp(cmol);
 
@@ -247,7 +248,7 @@ bool rdkit_sd_writer_get_text_ex(rdkit_string_owned *text, const rdkit_ROMol *cm
 	}
 
 	try {
-		rdkit_string_owned_ctor_move(text, SDWriter::getText(*mol, conf_id, kekulize, force_v3000, mol_id, prop_names));
+		rdkit_string_owned_ctor_move(text, SDWriter::getText(*mol, conf_id, !!kekulize, !!force_v3000, mol_id, prop_names));
 		return true;
 	} catch (const std::exception& e) {
 		rdkit_string_owned_ctor(text);

@@ -37,9 +37,14 @@ void rdkit_chemical_reaction_del(rdkit_ChemicalReaction *cthis)
 	::operator delete(this_);
 }
 
-void rdkit_chemical_reaction_ctor(rdkit_ChemicalReaction *cthis)
+bool rdkit_chemical_reaction_ctor(rdkit_ChemicalReaction *cthis)
 {
-	new (cthis) ChemicalReaction();
+	try {
+		new (cthis) ChemicalReaction();
+		return true;
+	} catch (...) {
+		return false;
+	}
 }
 
 void rdkit_chemical_reaction_dtor(rdkit_ChemicalReaction *cthis)
@@ -63,12 +68,12 @@ void rdkit_chemical_reaction_init_reactant_matchers_ex(rdkit_ChemicalReaction *c
 	this_->initReactantMatchers(silent);
 }
 
-rdkit_ROMol_sptr_vec_vec *rdkit_chemical_reaction_run_reactants(rdkit_ChemicalReaction *cthis, rdkit_ROMol_sptr_vec *creactants)
+bool rdkit_chemical_reaction_run_reactants(const rdkit_ChemicalReaction *cthis, const rdkit_ROMol_sptr_vec *creactants, rdkit_ROMol_sptr_vec_vec *cproducts)
 {
-	return rdkit_chemical_reaction_run_reactants_ex(cthis, creactants, RDKIT_DEFAULT_U32);
+	return rdkit_chemical_reaction_run_reactants_ex(cthis, creactants, cproducts, RDKIT_DEFAULT_U32);
 }
 
-rdkit_ROMol_sptr_vec_vec *rdkit_chemical_reaction_run_reactants_ex(rdkit_ChemicalReaction *cthis, rdkit_ROMol_sptr_vec *creactants, uint32_t max_num_products)
+bool rdkit_chemical_reaction_run_reactants_ex(const rdkit_ChemicalReaction *cthis, const rdkit_ROMol_sptr_vec *creactants, rdkit_ROMol_sptr_vec_vec *cproducts, uint32_t max_num_products)
 {
 	auto this_ = c2cpp(cthis);
 
@@ -76,14 +81,20 @@ rdkit_ROMol_sptr_vec_vec *rdkit_chemical_reaction_run_reactants_ex(rdkit_Chemica
 		max_num_products = 1000;
 
 	auto reactants = c2cpp(creactants);
-	auto products = new std::vector<MOL_SPTR_VECT>(this_->runReactants(*reactants, max_num_products));
-	return cpp2c(products);
+
+	try {
+		new (cproducts) std::vector<MOL_SPTR_VECT>(this_->runReactants(*reactants, max_num_products));
+	} catch(...) {
+		return false;
+	}
+
+	return true;
 }
 
-rdkit_ROMol_sptr_vec *rdkit_chemical_reaction_get_reactants(const rdkit_ChemicalReaction *cthis)
+const rdkit_ROMol_sptr_vec *rdkit_chemical_reaction_get_reactants(const rdkit_ChemicalReaction *cthis)
 {
 	auto this_ = c2cpp(cthis);
 
 	auto &reactants = this_->getReactants();
-	return cpp2c(const_cast<RDKit::MOL_SPTR_VECT *>(&reactants));
+	return cpp2c(&reactants);
 }

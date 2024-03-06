@@ -75,17 +75,22 @@ static inline void ctor_ex_defaults(
 		size_output_queue = 5;
 }
 
-void rdkit_multithreaded_smiles_mol_supplier_ctor(rdkit_MultithreadedSmilesMolSupplier *cthis)
+bool rdkit_multithreaded_smiles_mol_supplier_ctor(rdkit_MultithreadedSmilesMolSupplier *cthis)
 {
-	new (cthis) MultithreadedSmilesMolSupplier();
+	try {
+		new (cthis) MultithreadedSmilesMolSupplier();
+		return true;
+	} catch (...) {
+		return false;
+	}
 }
 
-void rdkit_multithreaded_smiles_mol_supplier_ctor_filename(rdkit_MultithreadedSmilesMolSupplier *cthis, const char *filename)
+bool rdkit_multithreaded_smiles_mol_supplier_ctor_filename(rdkit_MultithreadedSmilesMolSupplier *cthis, const char *filename)
 {
-	rdkit_multithreaded_smiles_mol_supplier_ctor_filename_ex(cthis, filename, RDKIT_DEFAULT_PTR, RDKIT_DEFAULT_I32, RDKIT_DEFAULT_I32, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE);
+	return rdkit_multithreaded_smiles_mol_supplier_ctor_filename_ex(cthis, filename, RDKIT_DEFAULT_PTR, RDKIT_DEFAULT_I32, RDKIT_DEFAULT_I32, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE);
 }
 
-void rdkit_multithreaded_smiles_mol_supplier_ctor_filename_ex(
+bool rdkit_multithreaded_smiles_mol_supplier_ctor_filename_ex(
 	rdkit_MultithreadedSmilesMolSupplier *cthis,
 	const char *filename,
 	const rdkit_string *delimiter,
@@ -100,18 +105,20 @@ void rdkit_multithreaded_smiles_mol_supplier_ctor_filename_ex(
 	ctor_ex_defaults(delimiter, smiles_column, name_column, title_line, sanitize, num_writer_threads, size_input_queue, size_output_queue);
 
 	try {
-		new (cthis) MultithreadedSmilesMolSupplier(zstring_view(filename), rdkit_string_to_view(delimiter), smiles_column, name_column, title_line, sanitize, num_writer_threads, size_input_queue, size_output_queue);
+		new (cthis) MultithreadedSmilesMolSupplier(zstring_view(filename), rdkit_string_to_view(delimiter), smiles_column, name_column, !!title_line, !!sanitize, num_writer_threads, size_input_queue, size_output_queue);
+		return true;
 	} catch (const std::exception& e) {
 		// TODO
+		return false;
 	}
 }
 
-void rdkit_multithreaded_smiles_mol_supplier_ctor_istream(rdkit_MultithreadedSmilesMolSupplier *cthis, rdkit_istream *cstream)
+bool rdkit_multithreaded_smiles_mol_supplier_ctor_istream(rdkit_MultithreadedSmilesMolSupplier *cthis, rdkit_istream *cstream)
 {
-	rdkit_multithreaded_smiles_mol_supplier_ctor_istream_ex(cthis, cstream, RDKIT_DEFAULT_PTR, RDKIT_DEFAULT_I32, RDKIT_DEFAULT_I32, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE);
+	return rdkit_multithreaded_smiles_mol_supplier_ctor_istream_ex(cthis, cstream, RDKIT_DEFAULT_PTR, RDKIT_DEFAULT_I32, RDKIT_DEFAULT_I32, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE);
 }
 
-void rdkit_multithreaded_smiles_mol_supplier_ctor_istream_ex(
+bool rdkit_multithreaded_smiles_mol_supplier_ctor_istream_ex(
 	rdkit_MultithreadedSmilesMolSupplier *cthis,
 	rdkit_istream *cstream,
 	const rdkit_string *delimiter,
@@ -128,14 +135,16 @@ void rdkit_multithreaded_smiles_mol_supplier_ctor_istream_ex(
 	auto stream = c2cpp(cstream);
 
 	try {
-		new (cthis) MultithreadedSmilesMolSupplier(stream, false, rdkit_string_to_view(delimiter), smiles_column, name_column, title_line, sanitize, num_writer_threads, size_input_queue, size_output_queue);
+		new (cthis) MultithreadedSmilesMolSupplier(stream, false, rdkit_string_to_view(delimiter), smiles_column, name_column, !!title_line, !!sanitize, num_writer_threads, size_input_queue, size_output_queue);
+		return true;
 	} catch (const std::exception& e) {
 		// TODO
+		return false;
 	}
 }
 
 void rdkit_multithreaded_smiles_mol_supplier_dtor(rdkit_MultithreadedSmilesMolSupplier *cthis)
 {
 	auto this_ = c2cpp(cthis);
-	delete this_;
+	this_->~MultithreadedSmilesMolSupplier();
 }

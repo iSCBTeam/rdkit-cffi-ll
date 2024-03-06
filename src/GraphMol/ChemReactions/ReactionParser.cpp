@@ -29,7 +29,7 @@ bool rdkit_rxn_smarts_to_chemical_reaction_ex(rdkit_ChemicalReaction *cthis, con
 		if (!react)
 			return false;
 
-		new (cthis) ChemicalReaction(*react);
+		new (cthis) ChemicalReaction(*react); // Cannot move sadly...
 		delete react;
 		return true;
 	} catch (const std::exception& e) {

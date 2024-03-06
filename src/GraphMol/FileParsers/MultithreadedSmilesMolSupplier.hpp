@@ -13,9 +13,19 @@ constexpr MultithreadedSmilesMolSupplier *c2cpp(rdkit_MultithreadedSmilesMolSupp
     return std::bit_cast<MultithreadedSmilesMolSupplier *>(cthis);
 }
 
+constexpr const MultithreadedSmilesMolSupplier *c2cpp(const rdkit_MultithreadedSmilesMolSupplier *cthis)
+{
+    return std::bit_cast<const MultithreadedSmilesMolSupplier *>(cthis);
+}
+
 constexpr rdkit_MultithreadedSmilesMolSupplier *cpp2c(MultithreadedSmilesMolSupplier *this_)
 {
     return std::bit_cast<rdkit_MultithreadedSmilesMolSupplier *>(this_);
+}
+
+constexpr const rdkit_MultithreadedSmilesMolSupplier *cpp2c(const MultithreadedSmilesMolSupplier *this_)
+{
+    return std::bit_cast<const rdkit_MultithreadedSmilesMolSupplier *>(this_);
 }
 
 }

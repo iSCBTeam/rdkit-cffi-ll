@@ -64,17 +64,22 @@ static inline void ctor_ex_defaults(
 		size_output_queue = 5;
 }
 
-void rdkit_multithreaded_sd_mol_supplier_ctor(rdkit_MultithreadedSDMolSupplier *cthis)
+bool rdkit_multithreaded_sd_mol_supplier_ctor(rdkit_MultithreadedSDMolSupplier *cthis)
 {
-	new (cthis) MultithreadedSDMolSupplier();
+	try {
+		new (cthis) MultithreadedSDMolSupplier();
+		return true;
+	} catch (...) {
+		return false;
+	}
 }
 
-void rdkit_multithreaded_sd_mol_supplier_ctor_filename(rdkit_MultithreadedSDMolSupplier *cthis, const char *filename)
+bool rdkit_multithreaded_sd_mol_supplier_ctor_filename(rdkit_MultithreadedSDMolSupplier *cthis, const char *filename)
 {
-	rdkit_multithreaded_sd_mol_supplier_ctor_filename_ex(cthis, filename, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE);
+	return rdkit_multithreaded_sd_mol_supplier_ctor_filename_ex(cthis, filename, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE);
 }
 
-void rdkit_multithreaded_sd_mol_supplier_ctor_filename_ex(
+bool rdkit_multithreaded_sd_mol_supplier_ctor_filename_ex(
 	rdkit_MultithreadedSDMolSupplier *cthis,
 	const char *filename,
 	rdkit_tribool sanitize,
@@ -87,18 +92,20 @@ void rdkit_multithreaded_sd_mol_supplier_ctor_filename_ex(
 	ctor_ex_defaults(sanitize, remove_hs, strict_parsing, num_writer_threads, size_input_queue, size_output_queue);
 
 	try {
-		new (cthis) MultithreadedSDMolSupplier(zstring_view(filename), sanitize, remove_hs, strict_parsing, num_writer_threads, size_input_queue, size_output_queue);
+		new (cthis) MultithreadedSDMolSupplier(zstring_view(filename), !!sanitize, !!remove_hs, !!strict_parsing, num_writer_threads, size_input_queue, size_output_queue);
+		return true;
 	} catch (const std::exception& e) {
 		// TODO
+		return false;
 	}
 }
 
-void rdkit_multithreaded_sd_mol_supplier_ctor_istream(rdkit_MultithreadedSDMolSupplier *cthis, rdkit_istream *cstream)
+bool rdkit_multithreaded_sd_mol_supplier_ctor_istream(rdkit_MultithreadedSDMolSupplier *cthis, rdkit_istream *cstream)
 {
 	return rdkit_multithreaded_sd_mol_supplier_ctor_istream_ex(cthis, cstream, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE, RDKIT_DEFAULT_SIZE);
 }
 
-void rdkit_multithreaded_sd_mol_supplier_ctor_istream_ex(
+bool rdkit_multithreaded_sd_mol_supplier_ctor_istream_ex(
 	rdkit_MultithreadedSDMolSupplier *cthis,
 	rdkit_istream *cstream,
 	rdkit_tribool sanitize,
@@ -113,9 +120,11 @@ void rdkit_multithreaded_sd_mol_supplier_ctor_istream_ex(
 	auto stream = c2cpp(cstream);
 
 	try {
-		new (cthis) MultithreadedSDMolSupplier(stream, false, sanitize, remove_hs, strict_parsing, num_writer_threads, size_input_queue, size_output_queue);
+		new (cthis) MultithreadedSDMolSupplier(stream, false, !!sanitize, !!remove_hs, !!strict_parsing, num_writer_threads, size_input_queue, size_output_queue);
+		return true;
 	} catch (const std::exception& e) {
 		// TODO
+		return false;
 	}
 }
 

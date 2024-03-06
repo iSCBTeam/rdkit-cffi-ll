@@ -9,14 +9,24 @@
 
 namespace RDKit {
 
-constexpr std::vector<MatchVectType> *c2cpp(rdkit_vec_MatchVectType *cthis)
+constexpr std::vector<MatchVectType> *c2cpp(rdkit_MatchVectType_vec *cthis)
 {
 	return std::bit_cast<std::vector<MatchVectType> *>(cthis);
 }
 
-constexpr rdkit_vec_MatchVectType *cpp2c(std::vector<MatchVectType> *this_)
+constexpr const std::vector<MatchVectType> *c2cpp(const rdkit_MatchVectType_vec *cthis)
 {
-	return std::bit_cast<rdkit_vec_MatchVectType *>(this_);
+	return std::bit_cast<const std::vector<MatchVectType> *>(cthis);
+}
+
+constexpr rdkit_MatchVectType_vec *cpp2c(std::vector<MatchVectType> *this_)
+{
+	return std::bit_cast<rdkit_MatchVectType_vec *>(this_);
+}
+
+constexpr const rdkit_MatchVectType_vec *cpp2c(const std::vector<MatchVectType> *this_)
+{
+	return std::bit_cast<const rdkit_MatchVectType_vec *>(this_);
 }
 
 }

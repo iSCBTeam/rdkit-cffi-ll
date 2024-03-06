@@ -37,6 +37,13 @@ void rdkit_rwmol_ctor(rdkit_RWMol *cthis)
 	new (cthis) RWMol();
 }
 
+void rdkit_rwmol_ctor_from_romol(rdkit_RWMol *cthis, const rdkit_ROMol *cromol)
+{
+	auto romol = c2cpp(cromol);
+
+	new (cthis) RWMol(*romol);
+}
+
 void rdkit_rwmol_dtor(rdkit_RWMol *cthis)
 {
 	auto this_ = c2cpp(cthis);

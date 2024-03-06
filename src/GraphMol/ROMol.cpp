@@ -5,6 +5,8 @@
 
 #include "RDGeneral/RDProps.hpp"
 #include "Atom.hpp"
+#include "Bond.hpp"
+#include "Conformer.hpp"
 #include "ROMol.hpp"
 #include "RWMol.hpp"
 
@@ -45,6 +47,29 @@ void rdkit_romol_del(rdkit_ROMol *cthis)
 void rdkit_romol_ctor(rdkit_ROMol *cthis)
 {
 	new (cthis) ROMol();
+}
+
+void rdkit_romol_ctor_clone(rdkit_ROMol *cthis, const rdkit_ROMol *cother)
+{
+	rdkit_romol_ctor_clone_ex(cthis, cother, RDKIT_DEFAULT_TRIBOOL, RDKIT_DEFAULT_I32);
+}
+
+void rdkit_romol_ctor_clone_ex(rdkit_ROMol *cthis, const rdkit_ROMol *cother, rdkit_tribool quick_copy, int32_t conf_id)
+{
+	auto other = c2cpp(cother);
+
+	if (quick_copy == RDKIT_DEFAULT_TRIBOOL)
+		quick_copy = RDKIT_FALSE;
+	if (conf_id == RDKIT_DEFAULT_I32)
+		conf_id = -1;
+
+	new (cthis) ROMol(*other, quick_copy, conf_id);
+}
+
+void rdkit_romol_ctor_move(rdkit_ROMol *cthis, rdkit_ROMol *cother)
+{
+	auto other = c2cpp(cother);
+	new (cthis) ROMol(std::move(*other));
 }
 
 void rdkit_romol_ctor_from_rwmol_move(rdkit_ROMol *cthis, rdkit_RWMol *crwmol)
@@ -92,6 +117,60 @@ rdkit_Atom *rdkit_romol_get_atom_mut(rdkit_ROMol *cthis, uint32_t idx)
     auto this_ = c2cpp(cthis);
 	try {
 		return cpp2c(this_->getAtomWithIdx(idx));
+	} catch(...) {
+		return nullptr;
+	}
+}
+
+uint32_t rdkit_romol_get_num_bonds(const rdkit_ROMol *cthis)
+{
+    auto this_ = c2cpp(cthis);
+	return this_->getNumBonds();
+}
+
+const rdkit_Bond *rdkit_romol_get_bond_with_idx(const rdkit_ROMol *cthis, uint32_t idx)
+{
+    auto this_ = c2cpp(cthis);
+	try {
+		return cpp2c(this_->getBondWithIdx(idx));
+	} catch(...) {
+		return nullptr;
+	}
+}
+
+rdkit_Bond *rdkit_romol_get_bond_with_idx_mut(rdkit_ROMol *cthis, uint32_t idx)
+{
+    auto this_ = c2cpp(cthis);
+	try {
+		return cpp2c(this_->getBondWithIdx(idx));
+	} catch(...) {
+		return nullptr;
+	}
+}
+
+uint32_t rdkit_romol_get_num_conformers(const rdkit_ROMol *cthis)
+{
+    auto this_ = c2cpp(cthis);
+	return this_->getNumConformers();
+}
+
+const rdkit_Conformer *rdkit_romol_get_conformer(const rdkit_ROMol *cthis, int32_t idx)
+{
+    auto this_ = c2cpp(cthis);
+	try {
+		auto &conf = this_->getConformer(idx);
+		return cpp2c(&conf);
+	} catch(...) {
+		return nullptr;
+	}
+}
+
+rdkit_Conformer *rdkit_romol_get_conformer_mut(rdkit_ROMol *cthis, int32_t idx)
+{
+    auto this_ = c2cpp(cthis);
+	try {
+		auto &conf = this_->getConformer(idx);
+		return cpp2c(&conf);
 	} catch(...) {
 		return nullptr;
 	}
@@ -166,6 +245,15 @@ void rdkit_romol_sptr_vec_delete(rdkit_ROMol_sptr_vec *cthis, size_t i)
 	this_->erase(this_->begin() + i);
 }
 
+void rdkit_romol_sptr_vec_append(rdkit_ROMol_sptr_vec *cthis, rdkit_ROMol *cromol)
+{
+	auto this_ = c2cpp(cthis);
+	auto romol = c2cpp(cromol);
+
+	auto ptr = boost::make_shared<ROMol>(*romol);
+	this_->push_back(ptr);
+}
+
 void rdkit_romol_sptr_vec_append_move(rdkit_ROMol_sptr_vec *cthis, rdkit_ROMol *cromol)
 {
 	auto this_ = c2cpp(cthis);
@@ -173,6 +261,30 @@ void rdkit_romol_sptr_vec_append_move(rdkit_ROMol_sptr_vec *cthis, rdkit_ROMol *
 
 	auto ptr = boost::make_shared<ROMol>(std::move(*romol));
 	this_->push_back(ptr);
+}
+
+bool rdkit_romol_sptr_vec_set(rdkit_ROMol_sptr_vec *cthis, size_t i, rdkit_ROMol *cromol)
+{
+	auto this_ = c2cpp(cthis);
+	auto romol = c2cpp(cromol);
+
+	if (i >= this_->size())
+		this_->resize(i + 1);
+
+	(*this_)[i] = boost::make_shared<ROMol>(*romol);
+	return true;
+}
+
+bool rdkit_romol_sptr_vec_set_move(rdkit_ROMol_sptr_vec *cthis, size_t i, rdkit_ROMol *cromol)
+{
+	auto this_ = c2cpp(cthis);
+	auto romol = c2cpp(cromol);
+
+	if (i >= this_->size())
+		this_->resize(i + 1);
+
+	(*this_)[i] = boost::make_shared<ROMol>(std::move(*romol));
+	return true;
 }
 
 rdkit_ROMol_sptr_vec_vec *rdkit_romol_sptr_vec_vec_new(void)
@@ -244,10 +356,42 @@ void rdkit_romol_sptr_vec_vec_delete(rdkit_ROMol_sptr_vec_vec *cthis, size_t i)
 	this_->erase(this_->begin() + i);
 }
 
+void rdkit_romol_sptr_vec_vec_append(rdkit_ROMol_sptr_vec_vec *cthis, const rdkit_ROMol_sptr_vec *cromol_sptr_vec)
+{
+	auto this_ = c2cpp(cthis);
+	auto romol_sptr_vec = c2cpp(cromol_sptr_vec);
+
+	this_->push_back(*romol_sptr_vec);
+}
+
 void rdkit_romol_sptr_vec_vec_append_move(rdkit_ROMol_sptr_vec_vec *cthis, rdkit_ROMol_sptr_vec *cromol_sptr_vec)
 {
 	auto this_ = c2cpp(cthis);
 	auto romol_sptr_vec = c2cpp(cromol_sptr_vec);
 
 	this_->push_back(std::move(*romol_sptr_vec));
+}
+
+bool rdkit_romol_sptr_vec_vec_set(rdkit_ROMol_sptr_vec_vec *cthis, size_t i, rdkit_ROMol_sptr_vec *cromol_sptr_vec)
+{
+	auto this_ = c2cpp(cthis);
+	auto romol_sptr_vec = c2cpp(cromol_sptr_vec);
+
+	if (i >= this_->size())
+		this_->resize(i + 1);
+
+	(*this_)[i] = *romol_sptr_vec;
+	return true;
+}
+
+bool rdkit_romol_sptr_vec_vec_set_move(rdkit_ROMol_sptr_vec_vec *cthis, size_t i, rdkit_ROMol_sptr_vec *cromol_sptr_vec)
+{
+	auto this_ = c2cpp(cthis);
+	auto romol_sptr_vec = c2cpp(cromol_sptr_vec);
+
+	if (i >= this_->size())
+		this_->resize(i + 1);
+
+	(*this_)[i] = std::move(*romol_sptr_vec);
+	return true;
 }

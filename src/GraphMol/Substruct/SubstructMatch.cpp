@@ -7,40 +7,73 @@
 
 using namespace RDKit;
 
-rdkit_vec_MatchVectType *rdkit_substruct_match(rdkit_ROMol *cmol, rdkit_ROMol *cquery)
+bool rdkit_has_substruct_match(const rdkit_ROMol *cmol, const rdkit_ROMol *cquery)
 {
 	auto mol = c2cpp(cmol);
 	auto query = c2cpp(cquery);
 
-	auto matches = new std::vector<MatchVectType>(SubstructMatch(*mol, *query));
-	return cpp2c(matches);
+	try {
+		MatchVectType dummy_match_vect;
+		return SubstructMatch(*mol, *query, dummy_match_vect);
+	} catch(...) {
+		return false;
+	}
 }
 
-void rdkit_vec_match_vect_type_dtor(rdkit_vec_MatchVectType *cthis)
+bool rdkit_substruct_match(rdkit_MatchVectType_vec *cmatches, const rdkit_ROMol *cmol, const rdkit_ROMol *cquery)
+{
+	auto mol = c2cpp(cmol);
+	auto query = c2cpp(cquery);
+
+	try {
+		new (cmatches) std::vector<MatchVectType>(SubstructMatch(*mol, *query));
+
+		auto match_count = rdkit_match_vect_type_vec_size(cmatches);
+		if (match_count > 0)
+			return true;
+
+		rdkit_match_vect_type_vec_dtor(cmatches);
+		return false;
+	} catch (...) {
+		return false;
+	}
+}
+
+void rdkit_match_vect_type_vec_dtor(rdkit_MatchVectType_vec *cthis)
 {
 	auto this_ = c2cpp(cthis);
-	delete this_;
+	this_->~vector();
 }
 
-size_t rdkit_vec_match_vect_type_size(rdkit_vec_MatchVectType *cthis)
+size_t rdkit_match_vect_type_vec_size(const rdkit_MatchVectType_vec *cthis)
 {
 	auto this_ = c2cpp(cthis);
 	return this_->size();
 }
 
-size_t rdkit_vec_match_vect_type_sub_size(rdkit_vec_MatchVectType *cthis, size_t i)
+size_t rdkit_match_vect_type_vec_entry_size(const rdkit_MatchVectType_vec *cthis, size_t idx_entry)
 {
 	auto this_ = c2cpp(cthis);
-	return (*this_)[i].size();
+	return (*this_)[idx_entry].size();
 }
 
-void rdkit_vec_match_vect_type_sub_get(rdkit_vec_MatchVectType *cthis, size_t i, size_t j, int *query_atom_idx, int *mol_atom_idx)
+bool rdkit_match_vect_type_vec_get_entry_atom_pair(const rdkit_MatchVectType_vec *cthis, size_t idx_entry, size_t idx_pair, int32_t *idx_query_atom, int32_t *idx_mol_atom)
 {
 	auto this_ = c2cpp(cthis);
-	auto [first, second] = (*this_)[i][j];
 
-	if (query_atom_idx)
-		*query_atom_idx = first;
-	if (mol_atom_idx)
-		*mol_atom_idx = second;
+	if (idx_entry >= this_->size())
+		return false;
+
+	const auto &entry = (*this_)[idx_entry];
+	if (idx_pair >= entry.size())
+		return false;
+
+	auto [first, second] = entry[idx_pair];
+
+	if (idx_query_atom)
+		*idx_query_atom = first;
+	if (idx_mol_atom)
+		*idx_mol_atom = second;
+
+	return true;
 }

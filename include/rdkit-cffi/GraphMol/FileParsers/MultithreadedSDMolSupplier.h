@@ -19,11 +19,11 @@ RDKIT_CFFI_API rdkit_MultithreadedSDMolSupplier *rdkit_multithreaded_sd_mol_supp
 
 RDKIT_CFFI_API rdkit_MultithreadedSDMolSupplier *rdkit_multithreaded_sd_mol_supplier_new(void);
 RDKIT_CFFI_API void rdkit_multithreaded_sd_mol_supplier_del(rdkit_MultithreadedSDMolSupplier *cthis);
-RDKIT_CFFI_API void rdkit_multithreaded_sd_mol_supplier_ctor(rdkit_MultithreadedSDMolSupplier *cthis);
-RDKIT_CFFI_API void rdkit_multithreaded_sd_mol_supplier_ctor_filename(rdkit_MultithreadedSDMolSupplier *cthis, const char *filename);
-RDKIT_CFFI_API void rdkit_multithreaded_sd_mol_supplier_ctor_filename_ex(rdkit_MultithreadedSDMolSupplier *cthis, const char *filename, rdkit_tribool sanitize, rdkit_tribool remove_hs, rdkit_tribool strict_parsing, size_t num_writer_threads, size_t size_input_queue, size_t size_output_queue);
-RDKIT_CFFI_API void rdkit_multithreaded_sd_mol_supplier_ctor_istream(rdkit_MultithreadedSDMolSupplier *cthis, rdkit_istream *cstream);
-RDKIT_CFFI_API void rdkit_multithreaded_sd_mol_supplier_ctor_istream_ex(rdkit_MultithreadedSDMolSupplier *cthis, rdkit_istream *cstream, rdkit_tribool sanitize, rdkit_tribool remove_hs, rdkit_tribool strict_parsing, size_t num_writer_threads, size_t size_input_queue, size_t size_output_queue);
+RDKIT_CFFI_API bool rdkit_multithreaded_sd_mol_supplier_ctor(rdkit_MultithreadedSDMolSupplier *cthis);
+RDKIT_CFFI_API bool rdkit_multithreaded_sd_mol_supplier_ctor_filename(rdkit_MultithreadedSDMolSupplier *cthis, const char *filename);
+RDKIT_CFFI_API bool rdkit_multithreaded_sd_mol_supplier_ctor_filename_ex(rdkit_MultithreadedSDMolSupplier *cthis, const char *filename, rdkit_tribool sanitize, rdkit_tribool remove_hs, rdkit_tribool strict_parsing, size_t num_writer_threads, size_t size_input_queue, size_t size_output_queue);
+RDKIT_CFFI_API bool rdkit_multithreaded_sd_mol_supplier_ctor_istream(rdkit_MultithreadedSDMolSupplier *cthis, rdkit_istream *cstream);
+RDKIT_CFFI_API bool rdkit_multithreaded_sd_mol_supplier_ctor_istream_ex(rdkit_MultithreadedSDMolSupplier *cthis, rdkit_istream *cstream, rdkit_tribool sanitize, rdkit_tribool remove_hs, rdkit_tribool strict_parsing, size_t num_writer_threads, size_t size_input_queue, size_t size_output_queue);
 RDKIT_CFFI_API void rdkit_multithreaded_sd_mol_supplier_dtor(rdkit_MultithreadedSDMolSupplier *cthis);
 RDKIT_CFFI_API void rdkit_multithreaded_sd_mol_supplier_set_process_property_lists(rdkit_MultithreadedSDMolSupplier *cthis, bool val);
 RDKIT_CFFI_API bool rdkit_multithreaded_sd_mol_supplier_get_process_property_lists(rdkit_MultithreadedSDMolSupplier *cthis);

@@ -9,14 +9,18 @@
 extern "C" {
 #endif
 
-struct rdkit_vec_MatchVectType;
+struct rdkit_MatchVectType_vec
+{
+	alignas(RDKIT_ALIGNOF_MATCHVECTTYPE_VEC) char opaque[RDKIT_SIZEOF_MATCHVECTTYPE_VEC];
+};
 
-RDKIT_CFFI_API rdkit_vec_MatchVectType *rdkit_substruct_match(rdkit_ROMol *mol, rdkit_ROMol *query);
+RDKIT_CFFI_API bool rdkit_substruct_match(rdkit_MatchVectType_vec *cmatches, const rdkit_ROMol *cmol, const rdkit_ROMol *cquery);
+RDKIT_CFFI_API bool rdkit_has_substruct_match(const rdkit_ROMol *cmol, const rdkit_ROMol *cquery);
 
-RDKIT_CFFI_API void rdkit_vec_match_vect_type_dtor(rdkit_vec_MatchVectType *cthis);
-RDKIT_CFFI_API size_t rdkit_vec_match_vect_type_size(rdkit_vec_MatchVectType *cthis);
-RDKIT_CFFI_API size_t rdkit_vec_match_vect_type_sub_size(rdkit_vec_MatchVectType *cthis, size_t i);
-RDKIT_CFFI_API void rdkit_vec_match_vect_type_sub_get(rdkit_vec_MatchVectType *cthis, size_t i, size_t j, int *query_atom_idx, int *mol_atom_idx);
+RDKIT_CFFI_API void rdkit_match_vect_type_vec_dtor(rdkit_MatchVectType_vec *cthis);
+RDKIT_CFFI_API size_t rdkit_match_vect_type_vec_size(const rdkit_MatchVectType_vec *cthis);
+RDKIT_CFFI_API size_t rdkit_match_vect_type_vec_entry_size(const rdkit_MatchVectType_vec *cthis, size_t idx_entry);
+RDKIT_CFFI_API bool rdkit_match_vect_type_vec_get_entry_atom_pair(const rdkit_MatchVectType_vec *cthis, size_t idx_entry, size_t idx_pair, int32_t *idx_query_atom, int32_t *idx_mol_atom);
 
 #ifdef __cplusplus
 }

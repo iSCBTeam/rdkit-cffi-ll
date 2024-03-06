@@ -52,7 +52,7 @@ RDKIT_CFFI_API void rdkit_sd_writer_ctor_filename(rdkit_SDWriter *cthis, const c
 RDKIT_CFFI_API void rdkit_sd_writer_ctor_ostream(rdkit_SDWriter *cthis, rdkit_ostream *cstream);
 RDKIT_CFFI_API void rdkit_sd_writer_dtor(rdkit_SDWriter *cthis);
 RDKIT_CFFI_API bool rdkit_sd_writer_get_text(rdkit_string_owned *ctext, const rdkit_ROMol *cmol);
-RDKIT_CFFI_API bool rdkit_sd_writer_get_text_ex(rdkit_string_owned *ctext, const rdkit_ROMol *cmol, int32_t conf_id, rdkit_tribool kekulize, rdkit_tribool force_v3000, int32_t molid, size_t num_cprop_names, const char *cprop_names[]);
+RDKIT_CFFI_API bool rdkit_sd_writer_get_text_ex(rdkit_string_owned *ctext, const rdkit_ROMol *cmol, int32_t conf_id, rdkit_tribool kekulize, rdkit_tribool force_v3000, int32_t molid, size_t num_cprop_names, const char *const cprop_names[]);
 RDKIT_CFFI_API void rdkit_sd_writer_set_force_v3000(rdkit_SDWriter *cthis, bool val);
 RDKIT_CFFI_API bool rdkit_sd_writer_get_force_v3000(rdkit_SDWriter *cthis);
 RDKIT_CFFI_API void rdkit_sd_writer_set_kekulize(rdkit_SDWriter *cthis, bool val);

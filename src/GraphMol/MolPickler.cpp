@@ -9,12 +9,17 @@ using namespace RDKit;
 
 bool rdkit_mol_pickler_pickle_mol(const rdkit_ROMol *cromol, rdkit_string_owned *cres)
 {
+	return rdkit_mol_pickler_pickle_mol_ex(cromol, cres, RDKIT_MOL_PICKLER_OPTION_DEFAULT);
+}
+
+bool rdkit_mol_pickler_pickle_mol_ex(const rdkit_ROMol *cromol, rdkit_string_owned *cres, uint32_t flags)
+{
 	const auto *romol = c2cpp(cromol);
 	const char *ex_reason = "";
 
 	try {
 		std::string res;
-		MolPickler::pickleMol(*romol, res);
+		MolPickler::pickleMol(*romol, res, flags);
 		rdkit_string_owned_ctor_move(cres, std::move(res));
 		return true;
 	} catch (const std::exception& e) {
